@@ -2,6 +2,7 @@
 
 import { Canvas, useLoader, useFrame, ThreeEvent } from '@react-three/fiber';
 import { Suspense, useRef, useMemo } from 'react';
+import { useThree } from '@react-three/fiber';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import * as THREE from 'three';
@@ -20,6 +21,9 @@ export default function HeroParticles() {
 
 function HeroPoints() {
   const hoverTarget = useRef(new THREE.Vector3());
+  const { viewport } = useThree();
+  const baseWidth = 6;
+  const scale = Math.min(1, viewport.width / baseWidth);
   const hovering = useRef(false);
   const handlePointerMove = (event: ThreeEvent<PointerEvent>) => {
     hoverTarget.current.copy(event.point);
@@ -35,13 +39,14 @@ function HeroPoints() {
   const geometry = useMemo(() => {
     const geo = new TextGeometry('Sample\nCode', {
       font,
-      size: 1,
+      size: 1 * scale,
       depth: 0.1, // 厚みを0.1にする
       bevelEnabled: false,
+      curveSegments: 3,
     });
     geo.center();
     return geo;
-  }, [font]);
+  }, [font, scale]);
   // ジオメトリから面積に基づいてサンプリングした頂点位置を取得
   const sampledPositions = useMemo(() => {
     const nonIndexed = geometry.toNonIndexed();
@@ -67,7 +72,7 @@ function HeroPoints() {
       totalArea += area;
     }
     // 総面積に基づいて各三角形からサンプリングする点の数を決定
-    const targetPointCount = 10000;
+    const targetPointCount = 10000 * scale;
     const samples: number[] = [];
     const tempA = new THREE.Vector3();
     const tempB = new THREE.Vector3();
@@ -110,16 +115,16 @@ function HeroPoints() {
     }
 
     return Float32Array.from(samples);
-  }, [geometry]);
+  }, [geometry, scale]);
   // パーティクル用のシェーダーマテリアルを作成
   const uniforms = useMemo(
     () => ({
       uTime: { value: 0 },
       uHoverCenter: { value: new THREE.Vector3() },
       uHoverStrength: { value: 0 },
-      uHoverRadius: { value: 0.5 },
+      uHoverRadius: { value: 0.5 * scale },
     }),
-    [],
+    [scale],
   );
   const materialRef = useRef<THREE.ShaderMaterial | null>(null);
   useFrame((_, delta) => {
@@ -131,12 +136,12 @@ function HeroPoints() {
     material.uniforms.uHoverStrength.value = THREE.MathUtils.lerp(
       material.uniforms.uHoverStrength.value,
       hovering.current ? 1 : 0,
-      0.15,
+      0.15 * scale * scale,
     );
     material.uniforms.uHoverRadius.value = THREE.MathUtils.lerp(
       material.uniforms.uHoverRadius.value,
-      0.4,
-      0.1,
+      0.5 * scale,
+      0.1 * scale,
     );
   });
 
