@@ -1,5 +1,4 @@
 'use client';
-
 import HeroParticles from '@components/canvas/HeroParticles';
 
 export default function Hero() {
