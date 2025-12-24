@@ -1,8 +1,7 @@
 'use client';
 
-import { Canvas, useLoader, useFrame, ThreeEvent } from '@react-three/fiber';
-import { Suspense, useRef, useMemo } from 'react';
-import { useThree } from '@react-three/fiber';
+import { Canvas, useLoader, useFrame, ThreeEvent, useThree } from '@react-three/fiber';
+import { Suspense, useRef, useMemo, useEffect } from 'react';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import * as THREE from 'three';
@@ -21,10 +20,11 @@ export default function HeroParticles() {
 
 function HeroPoints() {
   const hoverTarget = useRef(new THREE.Vector3());
-  const { viewport } = useThree();
+  const { viewport, raycaster } = useThree();
   const baseWidth = 6;
   const scale = Math.min(1, viewport.width / baseWidth);
   const hovering = useRef(false);
+  const bufferRef = useRef<THREE.BufferGeometry | null>(null);
   const handlePointerMove = (event: ThreeEvent<PointerEvent>) => {
     hoverTarget.current.copy(event.point);
   };
@@ -72,7 +72,7 @@ function HeroPoints() {
       totalArea += area;
     }
     // 総面積に基づいて各三角形からサンプリングする点の数を決定
-    const targetPointCount = 10000 * scale;
+    const targetPointCount = Math.round(10000 * scale);
     const samples: number[] = [];
     const tempA = new THREE.Vector3();
     const tempB = new THREE.Vector3();
@@ -116,6 +116,24 @@ function HeroPoints() {
 
     return Float32Array.from(samples);
   }, [geometry, scale]);
+
+  useEffect(() => {
+    if (!bufferRef.current) return;
+    const geom = bufferRef.current;
+    const positionAttr = geom.getAttribute('position');
+    if (positionAttr) {
+      positionAttr.needsUpdate = true;
+    }
+    geom.computeBoundingBox();
+    geom.computeBoundingSphere();
+  }, [sampledPositions]);
+
+  // ポインタヒット判定がスケールに追従するよう、レイキャスターの閾値を調整
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/immutability
+    raycaster.params.Points = raycaster.params.Points || {};
+    raycaster.params.Points.threshold = 0.1 * scale;
+  }, [raycaster, scale]);
   // パーティクル用のシェーダーマテリアルを作成
   const uniforms = useMemo(
     () => ({
@@ -151,14 +169,8 @@ function HeroPoints() {
       onPointerOver={handlePointerOver}
       onPointerOut={handlePointerOut}
     >
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          array={sampledPositions}
-          itemSize={3}
-          count={sampledPositions.length / 3}
-          args={[sampledPositions, 3]}
-        />
+      <bufferGeometry ref={bufferRef} key={`${sampledPositions.length}-${scale}`}>
+        <bufferAttribute attach="attributes-position" args={[sampledPositions, 3]} />
       </bufferGeometry>
       <shaderMaterial
         ref={materialRef}
