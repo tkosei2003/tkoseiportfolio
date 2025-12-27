@@ -85,12 +85,12 @@ void main() {
   vec3 displaced = position;
   vec3 grad = vec3( snoise(vec3(position.yz + uTime, 0.0)) - snoise(vec3(position.yz - uTime, 0.0)), snoise(vec3(position.zx + uTime, 0.0)) - snoise(vec3(position.zx - uTime, 0.0)), snoise(vec3(position.xy + uTime, 0.0)) - snoise(vec3(position.xy - uTime, 0.0)) );
   displaced.xyz += amp * vec3(
-    // snoise(vec3(position.xy * freq, uTime)),
-    // snoise(vec3(position.yz * freq, uTime + 1.0)),
-    // snoise(vec3(position.zx * freq, uTime + 2.0))*grad.x
-    position.x,
-    position.y,
-    position.z
+    snoise(vec3(position.xy * freq, uTime)),
+    snoise(vec3(position.yz * freq, uTime + 1.0)),
+    snoise(vec3(position.zx * freq, uTime + 2.0))*grad.x
+    // position.x,
+    // position.y,
+    // position.z
   );
   // Hover effect
   vec3 toHover = displaced - uHoverCenter;

@@ -1,34 +1,48 @@
 'use client';
-import { motion } from 'framer-motion';
-import { useEffect } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import { gsap } from 'gsap';
 import Hero from '@components/sections/Hero';
 
 export default function HomePage() {
   const router = useRouter();
+  const heroRef = useRef<HTMLDivElement>(null);
+  const lockRef = useRef(false);
+  useLayoutEffect(() => {
+    if (!heroRef.current) return undefined;
+    gsap.set(heroRef.current, { opacity: 0, yPercent: -5 });
+    const tween = gsap.to(heroRef.current, {
+      opacity: 1,
+      yPercent: 0,
+      duration: 2.0,
+      ease: 'power3.out',
+    });
+  }, []);
   useEffect(() => {
-    let locked = false;
     const handler = (e: WheelEvent) => {
-      if (locked || e.deltaY <= 50) return;
-      locked = true;
-      router.push('/about');
-      setTimeout(() => {
-        locked = false;
-      }, 800); // 遷移完了まで無視
+      if (lockRef.current || e.deltaY <= 10) return;
+      lockRef.current = true;
+      gsap.to(heroRef.current, {
+        yPercent: -50,
+        opacity: 0,
+        duration: 0.6,
+        ease: 'power3.inOut',
+        onComplete: () => {
+          gsap.set(heroRef.current, { autoAlpha: 0 });
+          router.push('/about');
+        },
+        onInterrupt: () => {
+          lockRef.current = false;
+        },
+      });
     };
     window.addEventListener('wheel', handler, { passive: true });
     return () => window.removeEventListener('wheel', handler);
   }, [router]);
+
   return (
-    <motion.main
-      key="home"
-      initial={{ opacity: 1, y: 0 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -120 }}
-      transition={{ duration: 1.0, ease: [0.25, 0.1, 0.25, 1] }}
-      className="min-h-screen w-full"
-    >
+    <main ref={heroRef} className="min-h-screen w-full">
       <Hero />
-    </motion.main>
+    </main>
   );
 }

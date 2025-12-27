@@ -37,7 +37,7 @@ function HeroPoints() {
   // テキストジオメトリを作成
   const font = useLoader(FontLoader, '/fonts/Hero.json');
   const geometry = useMemo(() => {
-    const geo = new TextGeometry('Sample\nCode', {
+    const geo = new TextGeometry('Takaishi\nKosei', {
       font,
       size: 1 * scale,
       depth: 0.1, // 厚みを0.1にする
@@ -72,7 +72,7 @@ function HeroPoints() {
       totalArea += area;
     }
     // 総面積に基づいて各三角形からサンプリングする点の数を決定
-    const targetPointCount = Math.round(10000 * scale);
+    const targetPointCount = Math.round(12000 * scale);
     const samples: number[] = [];
     const tempA = new THREE.Vector3();
     const tempB = new THREE.Vector3();
