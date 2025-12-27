@@ -12,12 +12,12 @@ export default function AboutPage() {
   useLayoutEffect(() => {
     if (!aboutRef.current) return;
     const ctx = gsap.context(() => {
-      gsap.set(aboutRef.current, { opacity: 0, yPercent: 5 });
+      gsap.set(aboutRef.current, { opacity: 0, yPercent: 10 });
       const tween = gsap.to(aboutRef.current, {
         opacity: 1,
         yPercent: 0,
-        duration: 2.0,
-        ease: 'power3.out',
+        duration: 1.5,
+        ease: 'power3.in',
       });
     });
     return () => ctx.revert();
