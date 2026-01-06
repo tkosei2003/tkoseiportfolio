@@ -46,7 +46,7 @@ export default function AboutPage() {
   }, [router]);
 
   return (
-    <main ref={aboutRef} className="min-h-screen w-full">
+    <main ref={aboutRef} className="min-h-screen min-w-screen bg-white">
       <About />
     </main>
   );
