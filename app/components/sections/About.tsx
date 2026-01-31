@@ -1,9 +1,51 @@
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
+import AboutTypography from '@canvas/AboutTypography';
+
 export default function About() {
-  const blocks = [
-    { label: '研究', items: ['Python'] },
-    { label: 'インターン', items: ['Python', 'Flutter', 'Dart', 'JS'] },
-    { label: '個人開発', items: ['Next.js', 'Three.js', 'Blender'] },
-  ];
+  const [shadow, setShadow] = useState({ x: 40, y: 40 });
+  const targetRef = useRef({ x: 40, y: 40 });
+  const currentRef = useRef({ x: 40, y: 40 });
+  const rafRef = useRef<number>(0);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+      const normalizedX = (e.clientX - centerX) / centerX;
+      const normalizedY = (e.clientY - centerY) / centerY;
+
+      targetRef.current = {
+        x: -normalizedX * 40 + 20,
+        y: -normalizedY * 30 + 40,
+      };
+    };
+
+    const animate = () => {
+      // Smooth lerp
+      currentRef.current.x += (targetRef.current.x - currentRef.current.x) * 0.08;
+      currentRef.current.y += (targetRef.current.y - currentRef.current.y) * 0.08;
+
+      setShadow({
+        x: Math.round(currentRef.current.x),
+        y: Math.round(currentRef.current.y),
+      });
+
+      rafRef.current = requestAnimationFrame(animate);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    rafRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
+
+  const cardShadow = `${shadow.x}px ${shadow.y}px 40px rgba(0,0,0,0.35)`;
+
   return (
     <section
       className="relative -z-10 mx-auto flex min-h-screen min-w-screen items-center justify-center px-6 py-24"
@@ -19,12 +61,13 @@ export default function About() {
       <div className="w-full max-w-lg">
         <div className="aspect-[85/55]">
           <div
-            className="h-full w-full bg-white text-zinc-900 shadow-[40px_40px_40px_rgba(0,0,0,0.35)]"
+            className="h-full w-full bg-white text-zinc-900"
             style={{
               backgroundImage: "url('/paper_nc.png')",
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat',
+              boxShadow: cardShadow,
             }}
           >
             <div
@@ -80,17 +123,8 @@ export default function About() {
           </div>
         </div>
       </div>
-      {/* 背景タイポ */}
-      <div className="pointer-events-none absolute top-0 left-0 -z-10 text-[clamp(120px,33vw,650px)] leading-none font-black tracking-[-0.07em] text-black">
-        <span
-          className="inline-block -translate-x-[3%] -translate-y-[15%]"
-          style={{
-            textShadow: '-2px -2px 3px rgba(0,0,0,0.35), -2px -2px 3px rgba(0,0,0,0.35)',
-          }}
-        >
-          ABOUT
-        </span>
-      </div>
+      {/* 3D背景タイポ */}
+      <AboutTypography />
     </section>
   );
 }

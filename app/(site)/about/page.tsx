@@ -12,7 +12,7 @@ export default function AboutPage() {
   useLayoutEffect(() => {
     if (!aboutRef.current) return;
     const ctx = gsap.context(() => {
-      gsap.set(aboutRef.current, { opacity: 0, yPercent: 10 });
+      gsap.set(aboutRef.current, { opacity: 0, yPercent: 0 });
       const tween = gsap.to(aboutRef.current, {
         opacity: 1,
         yPercent: 0,
@@ -28,7 +28,7 @@ export default function AboutPage() {
       if (lockRef.current || e.deltaY >= -10) return;
       lockRef.current = true;
       gsap.to(aboutRef.current, {
-        yPercent: 30,
+        yPercent: 0,
         opacity: 0,
         duration: 0.6,
         ease: 'power3.inOut',
