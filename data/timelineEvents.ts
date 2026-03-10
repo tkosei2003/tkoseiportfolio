@@ -61,9 +61,7 @@ export const timelineEvents: TimelineEvent[] = [
     detail:
       '株式会社Affectifyにて、ソフトウェアエンジニア・テクニカルサポートとしてインターンを開始。',
     summary: 'チーム開発の経験を現在に至るまで積む。',
-    links: [
-      { label: '株式会社Affectify 企業HP', href: 'https://affectify.jp/recruit/', external: true },
-    ],
+    links: [{ label: '株式会社Affectify 企業HP', href: 'https://affectify.jp/', external: true }],
   },
   {
     date: '2025.10',
