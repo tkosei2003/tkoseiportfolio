@@ -385,9 +385,6 @@ export default function TimelinePage() {
               <p className="text-xs tracking-[0.16em] text-white/45 uppercase">
                 {activeEvent.date}
               </p>
-              <span className="rounded border border-white/25 px-1.5 py-0.5 text-[11px] tracking-[0.14em] text-white/45">
-                {activeProgressLabel}
-              </span>
             </div>
             <p className="mt-2 text-lg leading-tight font-semibold sm:text-xl">
               {activeEvent.title}
@@ -416,6 +413,9 @@ export default function TimelinePage() {
               ) : null}
             </div>
           </div>
+          <span className="rounded border border-white/25 px-1.5 py-0.5 text-[11px] tracking-[0.14em] text-white/45">
+            {activeProgressLabel}
+          </span>
         </div>
 
         <div

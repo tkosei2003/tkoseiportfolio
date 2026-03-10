@@ -86,7 +86,7 @@ export const timelineEvents: TimelineEvent[] = [
   },
   {
     date: '2025.12',
-    title: '感覚代行シンポジウムにて感覚代行研究奨励賞受賞',
+    title: '感覚代行研究奨励賞受賞',
     detail: '感覚代行シンポジウムにて口頭発表を行い、感覚代行研究奨励賞を受賞する。',
     summary: '',
     links: [
