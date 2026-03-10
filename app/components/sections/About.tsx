@@ -44,41 +44,27 @@ export default function About() {
     };
   }, []);
 
-  const cardShadow = `${shadow.x}px ${shadow.y}px 40px rgba(0,0,0,0.35)`;
+  const primaryShadowX = Math.round(shadow.x * 0.65);
+  const primaryShadowY = Math.round(shadow.y * 0.65);
+  const accentShadowX = Math.round(shadow.x * 0.22);
+  const accentShadowY = Math.round(shadow.y * 0.22);
+  const cardShadow = `${primaryShadowX}px ${primaryShadowY}px 56px rgba(0,0,0,0.62), ${accentShadowX}px ${accentShadowY}px 26px rgba(56,189,248,0.24), 0 0 0 1px rgba(255,255,255,0.16)`;
 
   return (
-    <section
-      className="relative -z-10 mx-auto flex min-h-screen min-w-screen items-center justify-center px-6 py-24"
-      style={{
-        backgroundImage: "url('/paper_nc.png')",
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-      }}
-    >
-      <div className="pointer-events-none absolute inset-0 bg-white/40" />
+    <section className="relative z-0 mx-auto flex min-h-screen min-w-screen items-center justify-center overflow-hidden bg-zinc-950 px-6 py-24">
+      <div className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(56,189,248,0.12),transparent_45%),radial-gradient(circle_at_80%_70%,rgba(99,102,241,0.1),transparent_42%),linear-gradient(180deg,rgba(3,7,18,0.45),rgba(3,7,18,0.82))]" />
       {/* 名刺カード */}
-      <div className="w-full max-w-lg">
+      <div data-about-card className="relative z-20 w-full max-w-lg">
         <div className="aspect-[85/55]">
           <div
-            className="h-full w-full bg-white text-zinc-900"
+            className="h-full w-full bg-zinc-100 text-zinc-900"
             style={{
-              backgroundImage: "url('/paper_nc.png')",
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat',
+              background:
+                'linear-gradient(145deg, rgba(248,250,252,0.98) 0%, rgba(228,232,238,0.96) 100%)',
               boxShadow: cardShadow,
             }}
           >
-            <div
-              className="h-[99.8%] w-[99.8%] bg-white text-zinc-900 shadow-[1px_1px_1px_rgba(0,0,0,0.8)]"
-              style={{
-                backgroundImage: "url('/paper_bg.png')",
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                backgroundRepeat: 'no-repeat',
-              }}
-            >
+            <div className="h-[99.8%] w-[99.8%] border border-zinc-300/60 bg-zinc-50 text-zinc-900 shadow-[inset_0_1px_0_rgba(255,255,255,0.74)]">
               <div className="[container-type:inline-size] relative h-full w-full p-[8%]">
                 {/* 所属 */}
                 <p className="text-[clamp(10px,3cqw,20px)] tracking-wide text-zinc-600">

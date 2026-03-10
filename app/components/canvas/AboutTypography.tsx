@@ -6,7 +6,10 @@ import AboutText3D from './AboutText3D';
 
 export default function AboutTypography() {
   return (
-    <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+    <div
+      data-about-typography
+      className="pointer-events-none absolute inset-0 z-0 overflow-hidden opacity-80"
+    >
       <Canvas
         camera={{ position: [0, 0, 10], fov: 50 }}
         dpr={[1, 1.5]}

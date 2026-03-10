@@ -44,12 +44,13 @@ export default function AboutText3D() {
 
   return (
     <>
-      <ambientLight intensity={0.6} />
+      <ambientLight intensity={0.32} />
+      <hemisphereLight color={'#bfdbfe'} groundColor={'#020617'} intensity={0.38} />
 
       <directionalLight
         ref={lightRef}
         position={[0, viewport.height * 0.3, 5]}
-        intensity={isMobile ? 1.2 : 1.8}
+        intensity={isMobile ? 1.05 : 1.45}
         castShadow
         shadow-mapSize={isMobile ? [1024, 1024] : [2048, 2048]}
         shadow-camera-near={0.1}
@@ -63,7 +64,7 @@ export default function AboutText3D() {
 
       <mesh position={[0, 0, -0.2]} receiveShadow>
         <planeGeometry args={[viewport.width * 2, viewport.height * 2]} />
-        <shadowMaterial opacity={1} color={'#9d9b9b'} />
+        <shadowMaterial opacity={0.42} color={'#020617'} />
       </mesh>
 
       <Center key={viewportKey} position={textPosition} rotation={textRotation}>
@@ -78,7 +79,13 @@ export default function AboutText3D() {
           castShadow
         >
           ABOUT
-          <meshStandardMaterial color="#ffffff" roughness={0.8} metalness={0.05} />
+          <meshStandardMaterial
+            color="#dbe7ff"
+            roughness={0.45}
+            metalness={0.22}
+            emissive="#1e293b"
+            emissiveIntensity={0.34}
+          />
         </Text3D>
       </Center>
     </>

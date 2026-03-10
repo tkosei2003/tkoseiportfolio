@@ -1,30 +1,35 @@
 'use client';
+
 import { useEffect, useLayoutEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { gsap } from 'gsap';
-import Hero from '@components/sections/Hero';
 import { setAboutEntryDirection } from '@lib/aboutTransition';
 
-const WHEEL_THRESHOLD = 10;
+const UP_WHEEL_THRESHOLD = -10;
 const SWIPE_THRESHOLD = 50;
 
-export default function HomePage() {
+export default function TimelinePage() {
   const router = useRouter();
-  const heroRef = useRef<HTMLDivElement>(null);
+  const timelineRef = useRef<HTMLDivElement>(null);
   const lockRef = useRef(false);
   const touchStartYRef = useRef<number | null>(null);
 
   useLayoutEffect(() => {
-    if (!heroRef.current) return undefined;
+    if (!timelineRef.current) return undefined;
     const ctx = gsap.context(() => {
-      gsap.set(heroRef.current, { opacity: 0, yPercent: -5 });
-      gsap.to(heroRef.current, {
-        opacity: 1,
-        yPercent: 0,
-        duration: 2.0,
-        ease: 'power3.out',
-      });
-    });
+      gsap.fromTo(
+        timelineRef.current,
+        { autoAlpha: 0, y: 32, filter: 'blur(6px)' },
+        {
+          autoAlpha: 1,
+          y: 0,
+          filter: 'blur(0px)',
+          duration: 0.9,
+          ease: 'power3.out',
+        },
+      );
+    }, timelineRef);
+
     return () => ctx.revert();
   }, []);
 
@@ -34,16 +39,16 @@ export default function HomePage() {
 
   useEffect(() => {
     const navigateToAbout = () => {
-      if (lockRef.current || !heroRef.current) return;
+      if (lockRef.current || !timelineRef.current) return;
       lockRef.current = true;
-      gsap.to(heroRef.current, {
-        yPercent: -50,
-        opacity: 0,
-        duration: 0.6,
-        ease: 'power3.inOut',
+      gsap.to(timelineRef.current, {
+        autoAlpha: 0,
+        y: 56,
+        filter: 'blur(6px)',
+        duration: 0.45,
+        ease: 'power2.inOut',
         onComplete: () => {
-          gsap.set(heroRef.current, { autoAlpha: 0 });
-          setAboutEntryDirection('from-bottom');
+          setAboutEntryDirection('from-top');
           router.replace('/about');
         },
         onInterrupt: () => {
@@ -53,8 +58,9 @@ export default function HomePage() {
     };
 
     const handleWheel = (e: WheelEvent) => {
-      if (e.deltaY <= WHEEL_THRESHOLD) return;
-      navigateToAbout();
+      if (e.deltaY <= UP_WHEEL_THRESHOLD) {
+        navigateToAbout();
+      }
     };
 
     const handleTouchStart = (e: TouchEvent) => {
@@ -68,8 +74,8 @@ export default function HomePage() {
 
       if (startY == null || endY == null) return;
 
-      const swipeDelta = startY - endY;
-      if (swipeDelta > SWIPE_THRESHOLD) {
+      const swipeDelta = endY - startY;
+      if (swipeDelta >= SWIPE_THRESHOLD) {
         navigateToAbout();
       }
     };
@@ -92,8 +98,14 @@ export default function HomePage() {
   }, [router]);
 
   return (
-    <main ref={heroRef} className="min-h-screen w-full">
-      <Hero />
+    <main ref={timelineRef} className="min-h-screen w-full bg-zinc-950 text-white">
+      <section className="mx-auto flex min-h-screen w-full max-w-5xl flex-col justify-center px-8 py-24">
+        <p className="text-xs tracking-[0.36em] text-white/55 uppercase">Next Section</p>
+        <h1 className="mt-4 text-5xl tracking-tight sm:text-7xl">Timeline</h1>
+        <p className="mt-8 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg">
+          Timelineセクションの実装はこれから追加予定です。上方向のスクロールまたは下スワイプでAboutへ戻れます。
+        </p>
+      </section>
     </main>
   );
 }
