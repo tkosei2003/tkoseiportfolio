@@ -14,7 +14,7 @@ const WHEEL_RESET_MS = 170;
 const ARC_STEP_DEG = 24;
 const MAX_VISIBLE_DISTANCE = 3;
 const MOBILE_MAX_VISIBLE_DISTANCE = 2;
-const MIN_ITEM_GAP_PX = 72;
+const MIN_ITEM_GAP_PX = 84;
 const INITIAL_ACTIVE_INDEX = Math.max(timelineEvents.length - 1, 0);
 
 export default function TimelinePage() {
@@ -347,51 +347,80 @@ export default function TimelinePage() {
       ref={pageRef}
       className="relative min-h-screen w-full overflow-hidden bg-black text-white"
     >
-      <section className="relative mx-auto flex min-h-screen w-full max-w-[1000px] flex-col gap-6 px-4 pt-[calc(4.5rem+env(safe-area-inset-top))] pb-8 sm:px-6 sm:pb-12 lg:block lg:px-10 lg:py-24">
-        <div className="z-10 max-w-none pr-1 lg:absolute lg:top-1/2 lg:left-10 lg:max-w-md lg:-translate-y-1/2">
+      <section className="relative mx-auto flex min-h-screen w-full max-w-[1100px] flex-col gap-6 px-4 pt-[calc(4.5rem+env(safe-area-inset-top))] pb-8 sm:px-6 sm:pb-12 lg:block lg:px-10 lg:py-24">
+        <div className="z-10 min-h-[300px] max-w-none pr-1 lg:absolute lg:top-1/2 lg:left-10 lg:min-h-0 lg:max-w-md lg:-translate-y-1/2">
           <p className="text-xs tracking-[0.34em] text-white/52 uppercase">History & News</p>
-          <h1 className="mt-3 text-4xl leading-none tracking-tight sm:mt-4 sm:text-6xl lg:text-7xl">
-            Timeline
-          </h1>
+          <div className="mt-3 flex items-end justify-between gap-3 sm:mt-4">
+            <h1 className="text-4xl leading-none tracking-tight sm:text-6xl lg:text-7xl">
+              Timeline
+            </h1>
+            <div className="flex items-end gap-2 text-[11px] text-white/45 sm:hidden">
+              <button
+                type="button"
+                disabled={activeIndex === 0}
+                onClick={() => {
+                  activeIndexRef.current = 0;
+                  setActiveIndex(0);
+                }}
+                className="pointer-events-auto px-1.5 py-0.5 tracking-[0.08em] transition hover:text-white disabled:pointer-events-none disabled:opacity-35"
+              >
+                Beginning
+              </button>
+              <span className="h-4.5 w-px bg-white/25" />
+              <button
+                type="button"
+                disabled={activeIndex === timelineEvents.length - 1}
+                onClick={() => {
+                  activeIndexRef.current = timelineEvents.length - 1;
+                  setActiveIndex(timelineEvents.length - 1);
+                }}
+                className="pointer-events-auto px-1.5 py-0.5 tracking-[0.08em] transition hover:text-white disabled:pointer-events-none disabled:opacity-35"
+              >
+                Latest
+              </button>
+            </div>
+          </div>
           <div ref={detailPanelRef} className="mt-9 text-white">
             <div className="flex items-center gap-3">
               <p className="text-xs tracking-[0.16em] text-white/45 uppercase">
                 {activeEvent.date}
               </p>
+              <span className="rounded border border-white/25 px-1.5 py-0.5 text-[11px] tracking-[0.14em] text-white/45">
+                {activeProgressLabel}
+              </span>
             </div>
             <p className="mt-2 text-lg leading-tight font-semibold sm:text-xl">
               {activeEvent.title}
             </p>
-            <p className="mt-2 text-sm leading-relaxed text-white/65 sm:text-[15px]">
-              {activeEvent.detail}
-            </p>
-            <p className="mt-2 text-sm leading-relaxed text-white/58 sm:text-[15px]">
-              {activeEvent.summary}
-            </p>
-            {activeEvent.links?.length ? (
-              <div className="mt-4 mb-2 flex flex-wrap gap-2">
-                {activeEvent.links.map((link) => (
-                  <a
-                    key={`${link.href}-${link.label}`}
-                    href={link.href}
-                    target={link.external ? '_blank' : undefined}
-                    rel={link.external ? 'noreferrer noopener' : undefined}
-                    className="min-h-5 rounded-full border border-white/28 px-3 py-1.5 text-xs tracking-[0.12em] text-white/78 transition hover:border-white/60 hover:text-white"
-                  >
-                    {link.label}
-                  </a>
-                ))}
-              </div>
-            ) : null}
+            <div className="mt-2 max-h-[170px] min-h-[130px] overflow-y-auto pr-1 sm:max-h-[186px] sm:min-h-[142px] lg:max-h-[210px] lg:min-h-[160px]">
+              <p className="text-sm leading-relaxed text-white/65 sm:text-[15px]">
+                {activeEvent.detail}
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-white/58 sm:text-[15px]">
+                {activeEvent.summary}
+              </p>
+              {activeEvent.links?.length ? (
+                <div className="mt-4 mb-2 flex flex-wrap gap-2">
+                  {activeEvent.links.map((link) => (
+                    <a
+                      key={`${link.href}-${link.label}`}
+                      href={link.href}
+                      target={link.external ? '_blank' : undefined}
+                      rel={link.external ? 'noreferrer noopener' : undefined}
+                      className="min-h-5 rounded-full border border-white/28 px-3 py-1.5 text-xs tracking-[0.12em] text-white/78 transition hover:border-white/60 hover:text-white"
+                    >
+                      {link.label}
+                    </a>
+                  ))}
+                </div>
+              ) : null}
+            </div>
           </div>
-          <span className="rounded border border-white/25 px-1.5 py-0.5 text-[11px] tracking-[0.14em] text-white/45">
-            {activeProgressLabel}
-          </span>
         </div>
 
         <div
           ref={revolverRef}
-          className="relative isolate mx-auto h-[420px] w-[calc(100%-1rem)] max-w-[640px] touch-none sm:h-[520px] sm:w-[calc(100%-2rem)] lg:absolute lg:top-1/2 lg:right-4 lg:h-[560px] lg:w-[min(64vw,820px)] lg:-translate-y-1/2"
+          className="relative isolate z-20 mx-auto -mt-20 h-[420px] w-[calc(100%-1rem)] max-w-[640px] touch-none sm:z-auto sm:mt-0 sm:h-[520px] sm:w-[calc(100%-2rem)] lg:absolute lg:top-1/2 lg:right-4 lg:h-[560px] lg:w-[min(64vw,820px)] lg:-translate-y-1/2"
           onPointerEnter={() => setIsRevolverTargeted(true)}
           onPointerLeave={() => setIsRevolverTargeted(false)}
           onFocusCapture={() => setIsRevolverTargeted(true)}
@@ -499,7 +528,7 @@ export default function TimelinePage() {
 
             return (
               <button
-                key={item.event.date}
+                key={`${item.event.date}-${item.index}`}
                 type="button"
                 data-revolver-item="true"
                 className="absolute top-1/2 text-left transition-[transform,opacity,filter] duration-500 ease-out will-change-transform [--entry-x:0px] [--entry-y:0px]"
@@ -542,10 +571,32 @@ export default function TimelinePage() {
             );
           })}
 
-          <div className="pointer-events-none absolute bottom-1 left-1/2 hidden -translate-x-1/2 items-center gap-4 text-white/35 sm:flex">
-            <span className="text-xl">↑</span>
-            <span className="h-5 w-px bg-white/22" />
-            <span className="text-xl">↓</span>
+          <div className="absolute bottom-0 left-1/2 z-20 hidden -translate-x-1/2 items-center gap-3 text-white/35 sm:-bottom-4 sm:flex sm:gap-4 lg:-bottom-5">
+            <button
+              type="button"
+              disabled={activeIndex === 0}
+              onClick={() => {
+                activeIndexRef.current = 0;
+                setActiveIndex(0);
+              }}
+              className="pointer-events-auto text-sm transition hover:text-white disabled:pointer-events-none disabled:opacity-35 sm:text-xl"
+            >
+              <p>Beginning</p>
+            </button>
+
+            <span className="h-4 w-px bg-white/22 sm:h-5" />
+
+            <button
+              type="button"
+              disabled={activeIndex === timelineEvents.length - 1}
+              onClick={() => {
+                activeIndexRef.current = timelineEvents.length - 1;
+                setActiveIndex(timelineEvents.length - 1);
+              }}
+              className="pointer-events-auto text-sm transition hover:text-white disabled:pointer-events-none disabled:opacity-35 sm:text-xl"
+            >
+              <p>Latest</p>
+            </button>
           </div>
         </div>
       </section>
