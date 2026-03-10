@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import AboutTypography from '@canvas/AboutTypography';
+import { aboutCardData } from '@data/aboutCard';
 
 export default function About() {
   const [shadow, setShadow] = useState({ x: 40, y: 40 });
@@ -68,16 +69,16 @@ export default function About() {
               <div className="[container-type:inline-size] relative h-full w-full p-[8%]">
                 {/* 所属 */}
                 <p className="text-[clamp(10px,3cqw,20px)] tracking-wide text-zinc-600">
-                  大阪公立大学 工学部 情報工学科 4年
+                  {aboutCardData.affiliation}
                 </p>
 
                 {/* 名前行 */}
                 <div className="mt-[2%] flex items-end gap-[2%]">
                   <h2 className="text-[clamp(20px,6cqw,32px)] font-semibold tracking-wide">
-                    高石 康世
+                    {aboutCardData.name}
                   </h2>
                   <span className="mb-[1.5%] text-[clamp(10px,3cqw,20px)] tracking-[0.2em] text-zinc-600 uppercase">
-                    takaishi kosei
+                    {aboutCardData.nameRomanized}
                   </span>
                 </div>
 
@@ -86,22 +87,22 @@ export default function About() {
 
                 {/* 情報 */}
                 <div className="absolute bottom-[10%] text-[clamp(10px,3cqw,20px)] leading-relaxed text-zinc-700">
-                  <p>兵庫県出身。</p>
-                  <p>大阪公立大学で情報学を専攻。</p>
-                  <p>専門は画像処理。</p>
-                  <p>アルバイトでアプリケーション開発をしている。</p>
-                  <p>趣味は3Dモデリング。</p>
+                  {aboutCardData.bioLines.map((line) => (
+                    <p key={line}>{line}</p>
+                  ))}
                 </div>
 
                 {/* 右下ロゴ */}
                 <div className="absolute right-[8%] bottom-[8%] text-right">
                   <div className="text-[clamp(26px,4.5cqw,36px)] leading-none font-bold tracking-[-0.1rem]">
-                    M.T
+                    {aboutCardData.logoMark}
                   </div>
                   <p className="mt-[2%] text-[clamp(8px,1.3cqw,12px)] tracking-[0.2em] text-zinc-700 uppercase">
-                    MEISHI
-                    <br />
-                    TEKINA
+                    {aboutCardData.logoLines.map((line) => (
+                      <span key={line} className="block">
+                        {line}
+                      </span>
+                    ))}
                   </p>
                 </div>
               </div>

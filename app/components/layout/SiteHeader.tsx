@@ -3,12 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { setAboutEntryDirection } from '@lib/aboutTransition';
-
-const navItems = [
-  { href: '/', label: 'Home' },
-  { href: '/about', label: 'About' },
-  { href: '/timeline', label: 'Timeline' },
-];
+import { siteBrandLabel, siteNavItems } from '@data/siteHeader';
 
 export default function SiteHeader() {
   const pathname = usePathname();
@@ -24,11 +19,11 @@ export default function SiteHeader() {
           replace
           className="pointer-events-auto rounded-full border border-white/25 bg-black/60 px-4 py-2 text-xs tracking-[0.28em] uppercase backdrop-blur-md"
         >
-          Kosei Port
+          {siteBrandLabel}
         </Link>
         <nav className="pointer-events-auto">
           <ul className="flex items-center gap-1 rounded-full border border-white/25 bg-black/60 p-1 backdrop-blur-md">
-            {navItems.map((item) => {
+            {siteNavItems.map((item) => {
               const isActive = pathname === item.href;
               return (
                 <li key={item.href}>
