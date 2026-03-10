@@ -52,7 +52,7 @@ export default function About() {
 
   return (
     <section className="relative z-0 mx-auto flex min-h-screen min-w-screen items-center justify-center overflow-hidden bg-zinc-950 px-6 py-24">
-      <div className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(56,189,248,0.12),transparent_45%),radial-gradient(circle_at_80%_70%,rgba(99,102,241,0.1),transparent_42%),linear-gradient(180deg,rgba(3,7,18,0.45),rgba(3,7,18,0.82))]" />
+      {/* <div className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(56,189,248,0.12),transparent_45%),radial-gradient(circle_at_80%_70%,rgba(99,102,241,0.1),transparent_42%),linear-gradient(180deg,rgba(3,7,18,0.45),rgba(3,7,18,0.82))]" /> */}
       {/* 名刺カード */}
       <div data-about-card className="relative z-20 w-full max-w-lg">
         <div className="aspect-[85/55]">
